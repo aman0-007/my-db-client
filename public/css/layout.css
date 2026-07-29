@@ -29,10 +29,16 @@
 }
 
 .results-pane {
-    flex: 1; /* Takes up remaining vertical space */
-    background-color: var(--bg-base);
+    flex: 1;
+    background-color: var(--bg-base);    
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.results-wrapper {
+    flex: 1;
     overflow: auto;
-    position: relative;
 }
 
 /* Drag-to-Resize Handles */
@@ -116,9 +122,8 @@
         bottom: 12px;
         right: 12px;
     }
-    
+
     .results-pane { -webkit-overflow-scrolling: touch; }
-    .CodeMirror { height: 100% !important; }
 }
 
 .sidebar {
@@ -131,4 +136,18 @@
 
 .mobile-toggle-btn svg {
     transition: transform 0.3s ease;
+}
+
+.editor-wrapper {
+    flex: 1;
+    min-height: 0; 
+    position: relative; 
+    height: 100%;
+    width: 100%;
+    overflow: hidden; 
+}
+
+.CodeMirror {
+    height: 100% !important;
+    width: 100% !important;
 }

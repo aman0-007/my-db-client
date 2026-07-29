@@ -61,14 +61,28 @@ async function handleRunQuery() {
 
     setButtonLoading(true);
 
-    renderTable({ results: null, error: null }); 
-    document.getElementById('results-table').innerHTML = '<tr><td style="padding:16px; color:var(--text-secondary);">Executing query...</td></tr>';
+    // 1. Grab UI elements directly
+    const table = document.getElementById('results-table');
+    const statusDiv = document.getElementById('results-status');
+    
+    // 2. Clear the table and show a proper loading state in the status bar
+    table.innerHTML = ''; 
+    statusDiv.style.display = 'block';
+    statusDiv.className = 'results-status'; // Reset any error classes if you have them
+    statusDiv.textContent = 'Executing query...';
+
+    const startTime = performance.now();
 
     try {
         const data = await runQuery(sql);
-        renderTable(data);
+        
+        const endTime = performance.now();
+        const durationMs = Math.round(endTime - startTime);
+
+        // 3. Render the actual data, which will overwrite the loading status
+        renderTable(data, durationMs);
     } catch (error) {
-        renderTable({ error: "Database connection failed." });
+        renderTable({ error: error.message || "Database connection failed." });
     } finally {
         setButtonLoading(false); 
     }

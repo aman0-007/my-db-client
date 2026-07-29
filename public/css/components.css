@@ -210,3 +210,15 @@
     letter-spacing: 0.5px;
     font-family: system-ui, sans-serif;
 }
+
+/* Update the status bar styling */
+.results-status {
+    background-color: var(--bg-surface);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--border-subtle);
+    
+    flex-shrink: 0;
+}
