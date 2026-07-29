@@ -1,0 +1,57 @@
+.app-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* Base Panel Styles */
+.sidebar {
+    width: 240px; /* Default width */
+    min-width: 150px;
+    background-color: var(--bg-surface);
+    display: flex;
+    flex-direction: column;
+}
+
+.main-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* Prevents flex overflow */
+}
+
+.editor-pane {
+    height: 20%; /* Default height, reduced per your request */
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    position: relative; /* For absolute positioning of the button */
+}
+
+.results-pane {
+    flex: 1; /* Takes up remaining vertical space */
+    background-color: var(--bg-base);
+    overflow: auto;
+    position: relative;
+}
+
+/* Drag-to-Resize Handles */
+.resizer {
+    background-color: var(--border-subtle);
+    z-index: 10;
+    transition: background-color 0.2s ease;
+}
+
+.resizer:hover, .resizer.is-resizing {
+    background-color: var(--accent-blue);
+}
+
+.resizer-h {
+    width: 4px;
+    cursor: col-resize;
+}
+
+.resizer-v {
+    height: 4px;
+    cursor: row-resize;
+}

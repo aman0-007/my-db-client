@@ -1,0 +1,111 @@
+/* Sidebar Polish */
+.sidebar-header {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-subtle);
+}
+.sidebar-header .title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+}
+
+.tree-view { list-style: none; overflow-y: auto; padding-top: 8px; }
+.tree-view li {
+    padding: 6px 16px 6px 36px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+    transition: all 0.1s;
+}
+.tree-view li::before {
+    content: "≡";
+    position: absolute;
+    left: 16px;
+    color: var(--text-muted);
+}
+.tree-view li:hover { background-color: var(--bg-elevated); color: var(--text-primary); }
+
+/* Editor & Floating Button */
+.editor-wrapper {
+    flex: 1;
+    display: flex;
+    position: relative;
+}
+
+#sql-input {
+    flex: 1;
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    border: none;
+    padding: 16px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+    resize: none;
+    outline: none;
+}
+
+.floating-btn {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background-color: var(--accent-blue-bg);
+    color: var(--accent-blue);
+    border: 1px solid var(--accent-blue);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    backdrop-filter: blur(4px);
+    transition: all 0.2s ease;
+    z-index: 100;
+}
+.floating-btn:hover { background-color: var(--accent-blue); color: #fff; }
+
+/* Clean Data Grid */
+#results-table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 12px; white-space: nowrap; }
+#results-table th, #results-table td { padding: 6px 12px; text-align: left; border: 1px solid var(--border-subtle); border-top: none; border-left: none; }
+#results-table th { background-color: var(--bg-surface); color: var(--text-secondary); font-weight: 500; position: sticky; top: 0; z-index: 1; box-shadow: 0 1px 0 var(--border-subtle); }
+#results-table tr:hover td { background-color: var(--bg-elevated); }
+
+/* --- CodeMirror Overrides --- */
+.CodeMirror {
+    flex: 1; /* Stretch to fill flex container */
+    height: 100%; /* Important for vertical stretching */
+    font-family: var(--font-mono);
+    font-size: 14px;
+    background-color: var(--bg-base) !important;
+}
+
+/* Ensure the line numbers column matches our theme */
+.CodeMirror-gutters {
+    background-color: var(--bg-base) !important;
+    border-right: 1px solid var(--border-subtle) !important;
+}
+
+/* Hide the original textarea */
+#sql-input {
+    display: none;
+}
+
+/* --- Loading Spinner --- */
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+.floating-btn.is-loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+    pointer-events: none; /* Prevents double-clicks */
+}

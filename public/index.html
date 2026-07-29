@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- CodeMirror Core and Theme -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/darcula.min.css">
+
+    <title>Professional DB Client</title>
+
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <span class="title">Explorer</span>
+            </div>
+            <ul id="table-list" class="tree-view">
+                <li class="loading">Connecting...</li>
+            </ul>
+        </aside>
+
+        <!-- Horizontal Resizer -->
+        <div class="resizer resizer-h" id="resizer-sidebar"></div>
+
+        <!-- Right Side: Editor + Results -->
+        <div class="main-panel">
+            
+            <!-- Editor Pane -->
+            <main class="editor-pane" id="editor-pane">
+                <div class="editor-wrapper">
+                    <textarea id="sql-input" spellcheck="false" placeholder="Type your SQL query here..."></textarea>
+                    
+                    <!-- Floating Run Button -->
+                    <button id="run-btn" class="floating-btn" title="Run Query (Ctrl+Enter)">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        Run
+                    </button>
+                </div>
+            </main>
+
+            <!-- Vertical Resizer -->
+            <div class="resizer resizer-v" id="resizer-editor"></div>
+
+            <!-- Results Pane -->
+            <section class="results-pane" id="results-pane">
+                <div class="results-wrapper">
+                    <table id="results-table">
+                        <!-- Data injected via JS -->
+                    </table>
+                </div>
+            </section>
+            
+        </div>
+    </div>
+    
+    <!-- CodeMirror Core and SQL Mode -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/sql/sql.min.js"></script>
+    
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
