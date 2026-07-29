@@ -109,3 +109,69 @@
     cursor: not-allowed;
     pointer-events: none; /* Prevents double-clicks */
 }
+
+/* --- Schema Tree --- */
+.schema-item {
+    list-style: none;
+    margin-bottom: 2px;
+}
+
+.schema-header {
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.15s ease;
+    font-weight: 500;
+}
+
+.schema-header:hover {
+    background: rgba(255, 255, 255, 0.08); /* Subtle highlight for dark mode */
+}
+
+.chevron {
+    font-size: 0.7em;
+    color: #888;
+    transition: transform 0.2s ease;
+}
+
+/* Nested columns list */
+.column-list {
+    list-style: none;
+    padding: 4px 0 4px 20px; /* Indent the columns */
+    margin: 0;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    margin-left: 12px;
+}
+
+.column-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 8px;
+    font-size: 0.85em;
+    border-radius: 3px;
+    font-family: monospace; /* Monospace looks great for column data */
+}
+
+.column-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.col-name {
+    color: #9cdcfe; /* Light blue (Darcula/VSCode style) */
+}
+
+.col-type {
+    color: #6a9955; /* Green */
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+.loading-cols {
+    color: #888;
+    font-size: 0.85em;
+    padding-left: 8px;
+    font-style: italic;
+}

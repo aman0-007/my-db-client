@@ -1,4 +1,4 @@
-import { getTables, runQuery } from './api.js';
+import { getTables, runQuery, getColumns } from './api.js';
 import { renderSidebar, renderTable, setEditorValue, getEditorValue, initEditor, setButtonLoading } from './ui.js';
 import { initResizers } from './layout.js';
 
@@ -27,21 +27,47 @@ async function handleTableClick(tableName) {
     await handleRunQuery();
 }
 
-async function handleRunQuery() {
-    const sql = getEditorValue();
-    if (!sql) return;
+async function handleTableClick(tableName, container, header) {
+    const isExpanded = container.style.display === 'block';
+    const chevron = header.querySelector('.chevron');
 
-    setButtonLoading(true);
+    // If it's already open, close it
+    if (isExpanded) {
+        container.style.display = 'none';
+        chevron.style.transform = 'rotate(0deg)';
+        return;
+    }
 
-    renderTable({ results: null, error: null }); 
-    document.getElementById('results-table').innerHTML = '<tr><td style="padding:16px; color:var(--text-secondary);">Executing query...</td></tr>';
+    // If it's closed but already has data, just open it (prevent re-fetching)
+    if (container.children.length > 0) {
+        container.style.display = 'block';
+        chevron.style.transform = 'rotate(90deg)';
+        return;
+    }
+
+    // Otherwise, it's the first time clicking. Show a loading state and fetch.
+    container.innerHTML = '<li class="loading-cols">Loading columns...</li>';
+    container.style.display = 'block';
+    chevron.style.transform = 'rotate(90deg)';
 
     try {
-        const data = await runQuery(sql);
-        renderTable(data);
+        const columns = await getColumns(tableName);
+        container.innerHTML = ''; // Clear loading message
+        
+        columns.forEach(col => {
+            const li = document.createElement('li');
+            li.className = 'column-item';
+            
+            // Format data types for cleaner UI (e.g., "character varying" -> "varchar")
+            const shortType = col.data_type === 'character varying' ? 'varchar' : col.data_type;
+            
+            li.innerHTML = `
+                <span class="col-name">${col.column_name}</span> 
+                <span class="col-type">${shortType}</span>
+            `;
+            container.appendChild(li);
+        });
     } catch (error) {
-        renderTable({ error: "Database connection failed." });
-    } finally {
-        setButtonLoading(false); 
+        container.innerHTML = '<li class="error-msg">Failed to load columns</li>';
     }
 }

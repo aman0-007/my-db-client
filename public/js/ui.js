@@ -9,8 +9,25 @@ export function renderSidebar(tables, onTableClick) {
 
     tables.forEach(tableName => {
         const li = document.createElement('li');
-        li.textContent = tableName;
-        li.addEventListener('click', () => onTableClick(tableName));
+        li.className = 'schema-item';
+        
+        // The clickable header
+        const header = document.createElement('div');
+        header.className = 'schema-header';
+        header.innerHTML = `<span class="chevron">▶</span> <span>${tableName}</span>`;
+        
+        // The container for the columns (hidden by default)
+        const columnsContainer = document.createElement('ul');
+        columnsContainer.className = 'column-list';
+        columnsContainer.style.display = 'none';
+
+        // Bind the click event
+        header.addEventListener('click', () => {
+            onTableClick(tableName, columnsContainer, header);
+        });
+
+        li.appendChild(header);
+        li.appendChild(columnsContainer);
         tableList.appendChild(li);
     });
 }

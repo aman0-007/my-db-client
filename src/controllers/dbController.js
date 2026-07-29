@@ -29,3 +29,22 @@ exports.executeQuery = async (req, res) => {
         res.status(400).json({ error: err.message });
     }
 };
+
+exports.getColumns = async (req, res) => {
+    try {
+        const { table } = req.params;
+        const query = `
+            SELECT column_name, data_type 
+            FROM information_schema.columns 
+            WHERE table_schema = 'public' AND table_name = $1 
+            ORDER BY ordinal_position;
+        `;
+        
+        // Uses your existing db.query setup
+        const result = await db.query(query, [table]);
+        res.json(result.rows);
+    } catch (err) {
+        console.error("Error fetching columns:", err);
+        res.status(500).json({ error: err.message });
+    }
+};

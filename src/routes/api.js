@@ -8,4 +8,7 @@ router.get('/tables', dbController.getTables);
 // Route: POST /api/query
 router.post('/query', dbController.executeQuery);
 
+// Route: GET /api/columns/:table
+router.get('/columns/:table', dbController.getColumns);
+
 module.exports = router;

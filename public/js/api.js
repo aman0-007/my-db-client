@@ -12,3 +12,11 @@ export async function runQuery(sql) {
     });
     return await response.json();
 }
+
+export async function getColumns(tableName) {
+    const response = await fetch(`/api/columns/${tableName}`);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch columns for ${tableName}`);
+    }
+    return await response.json();
+}
