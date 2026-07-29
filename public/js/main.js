@@ -1,4 +1,4 @@
-import { getTables, runQuery, getColumns } from './api.js';
+import { getDbName, getTables, getColumns, runQuery } from './api.js';
 import { renderSidebar, renderTable, setEditorValue, getEditorValue, initEditor, setButtonLoading } from './ui.js';
 import { initResizers } from './layout.js';
 
@@ -11,7 +11,41 @@ async function initializeApp() {
     const runBtn = document.getElementById('run-btn');
     runBtn.addEventListener('click', handleRunQuery);
 
+    const mobileToggleBtn = document.getElementById('mobile-sidebar-toggle');
+    const sidebar = document.getElementById('sidebar');
+
     initEditor(handleRunQuery);
+
+    mobileToggleBtn.addEventListener('click', () => {
+        const isCollapsed = sidebar.classList.contains('is-collapsed');
+        
+        sidebar.classList.add('smooth-transition');
+
+        if (!isCollapsed) {
+            const headerHeight = document.querySelector('.sidebar-header').offsetHeight;
+            const dbInfoHeight = document.querySelector('.sidebar-connection-info').offsetHeight;
+            const targetHeight = headerHeight + dbInfoHeight;
+
+            sidebar.dataset.openHeight = sidebar.getBoundingClientRect().height + 'px';
+
+            sidebar.classList.add('is-collapsed');
+            sidebar.style.height = targetHeight + 'px';
+        } else {
+            sidebar.classList.remove('is-collapsed');
+            sidebar.style.height = sidebar.dataset.openHeight || '25vh';
+        }
+
+        setTimeout(() => {
+            sidebar.classList.remove('smooth-transition');
+        }, 300);
+    });
+
+    try {
+        const dbName = await getDbName();
+        document.getElementById('active-db-name').textContent = dbName;
+    } catch (error) {
+        document.getElementById('active-db-name').textContent = 'Disconnected';
+    }
 
     try {
         const tables = await getTables();
@@ -21,13 +55,38 @@ async function initializeApp() {
     }
 }
 
-async function handleTableClick(tableName) {
-    const query = `SELECT * FROM ${tableName} LIMIT 100;`;
-    setEditorValue(query);
-    await handleRunQuery();
+async function handleRunQuery() {
+    const sql = getEditorValue();
+    if (!sql) return;
+
+    setButtonLoading(true);
+
+    renderTable({ results: null, error: null }); 
+    document.getElementById('results-table').innerHTML = '<tr><td style="padding:16px; color:var(--text-secondary);">Executing query...</td></tr>';
+
+    try {
+        const data = await runQuery(sql);
+        renderTable(data);
+    } catch (error) {
+        renderTable({ error: "Database connection failed." });
+    } finally {
+        setButtonLoading(false); 
+    }
 }
 
-async function handleTableClick(tableName, container, header) {
+async function handleTableClick(tableName, container, header, event) {
+
+    const clickedExpand = event.target.closest('.chevron') || event.target.closest('.handle');
+
+    if (!clickedExpand) {
+        const query = `SELECT * FROM ${tableName} LIMIT 100;`;
+        setEditorValue(query);
+        handleRunQuery(); // Run in background
+        return; 
+    }
+
+    if (!container || !header) return; 
+
     const isExpanded = container.style.display === 'block';
     const chevron = header.querySelector('.chevron');
 
@@ -58,7 +117,6 @@ async function handleTableClick(tableName, container, header) {
             const li = document.createElement('li');
             li.className = 'column-item';
             
-            // Format data types for cleaner UI (e.g., "character varying" -> "varchar")
             const shortType = col.data_type === 'character varying' ? 'varchar' : col.data_type;
             
             li.innerHTML = `

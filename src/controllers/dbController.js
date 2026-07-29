@@ -1,5 +1,15 @@
 const db = require('../config/db');
 
+exports.getDbName = async (req, res) => {
+    try {
+        const result = await db.query('SELECT current_database() AS db_name;');
+        res.json({ dbName: result.rows[0].db_name });
+    } catch (err) {
+        console.error('Error fetching DB name:', err);
+        res.status(500).json({ error: 'Failed to fetch database name.' });
+    }
+};
+
 exports.getTables = async (req, res) => {
     try {
         const query = `
@@ -12,21 +22,6 @@ exports.getTables = async (req, res) => {
     } catch (err) {
         console.error('Error fetching tables:', err);
         res.status(500).json({ error: 'Failed to fetch database schema.' });
-    }
-};
-
-exports.executeQuery = async (req, res) => {
-    const { sql } = req.body;
-    
-    if (!sql) {
-        return res.status(400).json({ error: "No SQL provided" });
-    }
-
-    try {
-        const result = await db.query(sql);
-        res.json({ results: result.rows });
-    } catch (err) {
-        res.status(400).json({ error: err.message });
     }
 };
 
@@ -46,5 +41,20 @@ exports.getColumns = async (req, res) => {
     } catch (err) {
         console.error("Error fetching columns:", err);
         res.status(500).json({ error: err.message });
+    }
+};
+
+exports.executeQuery = async (req, res) => {
+    const { sql } = req.body;
+    
+    if (!sql) {
+        return res.status(400).json({ error: "No SQL provided" });
+    }
+
+    try {
+        const result = await db.query(sql);
+        res.json({ results: result.rows });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
     }
 };

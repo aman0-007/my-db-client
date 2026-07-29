@@ -2,45 +2,66 @@ export function initResizers() {
     // Horizontal Resizer (Sidebar)
     const sidebar = document.getElementById('sidebar');
     const resizerH = document.getElementById('resizer-sidebar');
+    let x, y, w, h;
 
-    let x, w;
-    const rsMouseupH = () => {
-        document.removeEventListener('mousemove', rsMousemoveH);
-        document.removeEventListener('mouseup', rsMouseupH);
+    const rsPointerUpH = () => {
+        document.removeEventListener('pointermove', rsPointerMoveH);
+        document.removeEventListener('pointerup', rsPointerUpH);
         resizerH.classList.remove('is-resizing');
     };
-    const rsMousemoveH = (e) => {
-        const dx = e.clientX - x;
-        sidebar.style.width = `${w + dx}px`;
+
+    const rsPointerMoveH = (e) => {
+        if (window.innerWidth <= 768) {
+            // Mobile: Dragging up/down changes HEIGHT
+            const dy = e.clientY - y;
+            sidebar.style.height = `${h + dy}px`;
+            sidebar.style.width = '100%'; 
+            sidebar.style.flex = 'none';
+        } else {
+            // Desktop: Dragging left/right changes WIDTH
+            const dx = e.clientX - x;
+            sidebar.style.width = `${w + dx}px`;
+            sidebar.style.height = '100%'; 
+            sidebar.style.flex = 'none';
+        }
     };
-    resizerH.addEventListener('mousedown', (e) => {
+
+    // Upgraded from mousedown to pointerdown
+    resizerH.addEventListener('pointerdown', (e) => {
+        e.preventDefault(); // Crucial for mobile touch dragging
         x = e.clientX;
+        y = e.clientY;
         w = sidebar.getBoundingClientRect().width;
+        h = sidebar.getBoundingClientRect().height;
         resizerH.classList.add('is-resizing');
-        document.addEventListener('mousemove', rsMousemoveH);
-        document.addEventListener('mouseup', rsMouseupH);
+        document.addEventListener('pointermove', rsPointerMoveH);
+        document.addEventListener('pointerup', rsPointerUpH);
     });
 
     // Vertical Resizer (Editor Pane)
     const editorPane = document.getElementById('editor-pane');
     const resizerV = document.getElementById('resizer-editor');
+    let yV, hV;
 
-    let y, h;
-    const rsMouseupV = () => {
-        document.removeEventListener('mousemove', rsMousemoveV);
-        document.removeEventListener('mouseup', rsMouseupV);
+    const rsPointerUpV = () => {
+        document.removeEventListener('pointermove', rsPointerMoveV);
+        document.removeEventListener('pointerup', rsPointerUpV);
         resizerV.classList.remove('is-resizing');
     };
-    const rsMousemoveV = (e) => {
-        const dy = e.clientY - y;
-        editorPane.style.height = `${h + dy}px`;
-        editorPane.style.flex = 'none'; // Overrides flex: 1 if set
+
+    const rsPointerMoveV = (e) => {
+        const dy = e.clientY - yV;
+        editorPane.style.height = `${hV + dy}px`;
+        editorPane.style.flex = 'none';
     };
-    resizerV.addEventListener('mousedown', (e) => {
-        y = e.clientY;
-        h = editorPane.getBoundingClientRect().height;
+
+    // Upgraded from mousedown to pointerdown
+    resizerV.addEventListener('pointerdown', (e) => {
+        e.preventDefault(); // Crucial for mobile touch dragging
+        yV = e.clientY;
+        hV = editorPane.getBoundingClientRect().height;
         resizerV.classList.add('is-resizing');
-        document.addEventListener('mousemove', rsMousemoveV);
-        document.addEventListener('mouseup', rsMouseupV);
+        document.addEventListener('pointermove', rsPointerMoveV);
+        document.addEventListener('pointerup', rsPointerUpV);
     });
 }

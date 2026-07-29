@@ -21,9 +21,20 @@
             <div class="sidebar-header">
                 <span class="title">Explorer</span>
             </div>
-            <ul id="table-list" class="tree-view">
-                <li class="loading">Connecting...</li>
-            </ul>
+            
+            <!-- The DB line now holds the toggle button -->
+            <div class="sidebar-connection-info">
+                <span class="db-icon">🗄️</span>
+                <span id="active-db-name" class="db-title">Connecting...</span>
+                
+                <button id="mobile-sidebar-toggle" class="mobile-toggle-btn" title="Toggle Sidebar">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="18 15 12 9 6 15"></polyline>
+                    </svg>
+                </button>
+            </div>
+            
+            <ul id="table-list" class="tree-view"></ul>
         </aside>
 
         <!-- Horizontal Resizer -->

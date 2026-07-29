@@ -2,6 +2,9 @@
 .sidebar-header {
     padding: 10px 16px;
     border-bottom: 1px solid var(--border-subtle);
+    display: flex;                 /* Added for alignment */
+    justify-content: space-between; /* Pushes button to right */
+    align-items: center;           /* Centers vertically */
 }
 .sidebar-header .title {
     font-size: 11px;
@@ -11,20 +14,13 @@
     color: var(--text-secondary);
 }
 
-.tree-view { list-style: none; overflow-y: auto; padding-top: 8px; }
+.tree-view { list-style: none; overflow-y: auto; padding-top: 0px; }
 .tree-view li {
-    padding: 6px 16px 6px 36px;
+    padding: 0;
     color: var(--text-secondary);
     cursor: pointer;
     position: relative;
     user-select: none;
-    transition: all 0.1s;
-}
-.tree-view li::before {
-    content: "≡";
-    position: absolute;
-    left: 16px;
-    color: var(--text-muted);
 }
 .tree-view li:hover { background-color: var(--bg-elevated); color: var(--text-primary); }
 
@@ -125,16 +121,32 @@
     gap: 8px;
     transition: background 0.15s ease;
     font-weight: 500;
+    user-select: none;
+}
+
+.schema-header > span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    height: 16px;
 }
 
 .schema-header:hover {
-    background: rgba(255, 255, 255, 0.08); /* Subtle highlight for dark mode */
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.schema-header .handle {
+    color: #555;
+    font-size: 1.1em;
+    cursor: grab;
 }
 
 .chevron {
     font-size: 0.7em;
     color: #888;
     transition: transform 0.2s ease;
+    width: 10px;
 }
 
 /* Nested columns list */
@@ -174,4 +186,27 @@
     font-size: 0.85em;
     padding-left: 8px;
     font-style: italic;
+}
+
+.sidebar-connection-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 4px;
+    font-size: 0.9em;
+}
+
+.db-icon {
+    font-size: 1.1em;
+    opacity: 0.7;
+}
+
+.db-title {
+    font-weight: 600;
+    color: #e1e1e1;
+    letter-spacing: 0.5px;
+    font-family: system-ui, sans-serif;
 }

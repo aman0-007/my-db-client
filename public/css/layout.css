@@ -40,6 +40,8 @@
     background-color: var(--border-subtle);
     z-index: 10;
     transition: background-color 0.2s ease;
+    touch-action: none;
+    user-select: none;
 }
 
 .resizer:hover, .resizer.is-resizing {
@@ -54,4 +56,79 @@
 .resizer-v {
     height: 4px;
     cursor: row-resize;
+}
+
+.mobile-toggle-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 4px;
+    margin-left: auto;
+}
+
+/* --- Mobile Responsiveness (Screens under 768px) --- */
+@media screen and (max-width: 768px) {
+    /* Stack the layout vertically */
+    .app-container {
+        flex-direction: column;
+    }
+    
+    /* Convert Sidebar into a top-anchored scrollable panel */
+    .sidebar {
+        width: 100% !important;
+        height: 25vh;
+        min-height: 40px;
+        border-right: none;
+    }
+
+    /* Show the toggle button and rotate it when collapsed */
+    .mobile-toggle-btn { display: block; }
+    .sidebar.is-collapsed .mobile-toggle-btn svg { transform: rotate(180deg); }
+
+
+    /* Hide the horizontal resizer to prevent JS conflicts */
+    .resizer-h {
+        display: block;
+        width: 100%;
+        height: 4px;
+        cursor: row-resize;
+    }
+
+    /* Main panel takes the rest of the height */
+    .main-panel {
+        width: 100%;
+        flex: 1;
+        height: auto;
+    }
+
+    /* Give the editor enough room to type */
+    .editor-pane {
+        height: 15%;
+        min-height: 100px;
+    }
+
+    /* Enhance touch targets for the floating button */
+    .floating-btn {
+        padding: 10px 18px; 
+        font-size: 14px;
+        bottom: 12px;
+        right: 12px;
+    }
+    
+    .results-pane { -webkit-overflow-scrolling: touch; }
+    .CodeMirror { height: 100% !important; }
+}
+
+.sidebar {
+    overflow: hidden; 
+}
+
+.smooth-transition {
+    transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.mobile-toggle-btn svg {
+    transition: transform 0.3s ease;
 }

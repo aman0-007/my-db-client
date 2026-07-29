@@ -14,7 +14,11 @@ export function renderSidebar(tables, onTableClick) {
         // The clickable header
         const header = document.createElement('div');
         header.className = 'schema-header';
-        header.innerHTML = `<span class="chevron">▶</span> <span>${tableName}</span>`;
+        header.innerHTML = `
+            <span class="handle">≡</span>
+            <span class="chevron">▶</span> 
+            <span>${tableName}</span>
+        `;
         
         // The container for the columns (hidden by default)
         const columnsContainer = document.createElement('ul');
@@ -22,8 +26,8 @@ export function renderSidebar(tables, onTableClick) {
         columnsContainer.style.display = 'none';
 
         // Bind the click event
-        header.addEventListener('click', () => {
-            onTableClick(tableName, columnsContainer, header);
+        header.addEventListener('click', (event) => {
+            onTableClick(tableName, columnsContainer, header, event);
         });
 
         li.appendChild(header);
