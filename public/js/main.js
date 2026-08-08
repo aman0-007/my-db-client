@@ -58,7 +58,6 @@ async function initializeApp() {
     }
 }
 
-// --- NEW: Handle Modal Tabs and Submit Button ---
 function setupConnectionModal() {
     const tabs = document.querySelectorAll('.tab-btn');
     const forms = document.querySelectorAll('.conn-form');
@@ -93,7 +92,6 @@ function setupConnectionModal() {
     });
 }
 
-// --- NEW: Handle Connection Logic ---
 async function executeConnection(config, saveToStorage) {
     const btn = document.getElementById('connect-submit-btn');
     const errorDiv = document.getElementById('conn-error');
@@ -101,7 +99,7 @@ async function executeConnection(config, saveToStorage) {
     btn.textContent = 'Connecting...';
     btn.style.opacity = '0.7';
     btn.disabled = true;
-    errorDiv.style.display = 'none';
+    if (errorDiv) errorDiv.style.display = 'none';
 
     try {
         await connectToDb(config);
@@ -110,21 +108,24 @@ async function executeConnection(config, saveToStorage) {
             localStorage.setItem('pg_client_config', JSON.stringify(config));
         }
 
-        // Hide modal and show disconnect button
         document.getElementById('connection-overlay').style.display = 'none';
         document.getElementById('disconnect-btn').style.display = 'block';
         
-        // Load UI Data now that we are connected
         const dbName = await getDbName();
         document.getElementById('active-db-name').textContent = dbName;
         
         const tables = await getTables();
         renderSidebar(tables, handleTableClick);
+        showToast('Connected to database successfully.', 'success');
         
     } catch (error) {
-        errorDiv.textContent = error.message || "Failed to connect";
-        errorDiv.style.display = 'block';
-        localStorage.removeItem('pg_client_config'); // Clear bad saved credentials
+        let errorMessage = error.message || "Failed to connect";
+        errorMessage = errorMessage.replace(/^Failed to connect:\s*/i, '');
+        
+        // Show the error toast
+        showToast(errorMessage, 'error');
+        
+        localStorage.removeItem('pg_client_config'); 
         document.getElementById('connection-overlay').style.display = 'flex';
         document.getElementById('active-db-name').textContent = 'Disconnected';
     } finally {
@@ -134,7 +135,6 @@ async function executeConnection(config, saveToStorage) {
     }
 }
 
-// --- NEW: Handle Disconnect Logic ---
 async function handleDisconnect() {
     localStorage.removeItem('pg_client_config');
     
@@ -154,9 +154,27 @@ async function handleDisconnect() {
     
     // Clear forms
     document.querySelectorAll('.conn-form input').forEach(input => input.value = '');
+    showToast('Disconnected from database.', 'info');
 }
 
-// --- Existing Functions Below ---
+function showToast(message, type = 'success') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    toast.innerHTML = `${message}`;
+    
+    container.appendChild(toast);
+    
+    requestAnimationFrame(() => {
+        toast.classList.add('show');
+    });
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
 
 async function handleRunQuery() {
     const sql = getEditorValue();
@@ -182,7 +200,10 @@ async function handleRunQuery() {
 
         renderTable(data, durationMs);
     } catch (error) {
-        renderTable({ error: error.message || "Database connection failed." });
+        const errorMessage = error.message || "Database connection failed.";
+        renderTable({ error: errorMessage });
+        
+        showToast(errorMessage, 'error');
     } finally {
         setButtonLoading(false); 
     }
@@ -237,5 +258,6 @@ async function handleTableClick(tableName, container, header, event) {
         });
     } catch (error) {
         container.innerHTML = '<li class="error-msg">Failed to load columns</li>';
+        showToast(`Failed to load columns for ${tableName}`, 'error');
     }
 }

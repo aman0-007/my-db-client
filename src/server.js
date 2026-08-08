@@ -2,7 +2,7 @@
 require('dotenv').config(); 
 const app = require('./app');
 
-const PORT = process.env.PORT || 5000;
+const PORT = 3001;
 
 app.listen(PORT, () => {
     console.log(`🚀 Database Client UI running on port ${PORT}`);
