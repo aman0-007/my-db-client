@@ -38,29 +38,33 @@ export function renderSidebar(tables, onTableClick) {
 
 export function renderTable(data, executionTimeMs = null) {
     const table = document.getElementById('results-table');
-    const statusDiv = document.getElementById('results-status');
+    const headerDiv = document.getElementById('results-header');
+    const statusText = document.getElementById('results-status');
+    const exportActions = document.getElementById('export-actions');
     
     table.innerHTML = ''; 
-    statusDiv.style.display = 'none'; // Reset status bar
+    headerDiv.style.display = 'none'; // Reset status bar
 
     if (data.error) {
-        table.innerHTML = `<tr><td class="error-msg">Error: ${data.error}</td></tr>`;
+        table.innerHTML = `Error: ${data.error}`;
         return;
     }
 
     if (!data.results || data.results.length === 0) {
-        statusDiv.style.display = 'block';
-        statusDiv.textContent = 'Query executed successfully. 0 rows returned.';
-        table.innerHTML = '<tr><td class="info-msg" style="padding:16px; color:var(--text-secondary);">No data to display.</td></tr>';
+        headerDiv.style.display = 'flex';
+        exportActions.style.display = 'none'; // Hide export if no data
+        statusText.textContent = 'Query executed successfully. 0 rows returned.';
+        table.innerHTML = 'No data to display.';
         return;
     }
 
     const rowCount = data.results.length;
     const timeText = executionTimeMs !== null ? ` in ${executionTimeMs} ms` : '';
 
-    // Show the status bar above the table
-    statusDiv.style.display = 'block';
-    statusDiv.textContent = `Query executed successfully. ${rowCount} row${rowCount === 1 ? '' : 's'} returned${timeText}.`;
+    // Show the header and export buttons
+    headerDiv.style.display = 'flex';
+    exportActions.style.display = 'flex';
+    statusText.textContent = `Query executed successfully.\n${rowCount} row${rowCount === 1 ? '' : 's'} returned${timeText}.`;
 
     const columns = Object.keys(data.results[0]);
 

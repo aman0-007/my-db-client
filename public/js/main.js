@@ -2,6 +2,8 @@ import { getDbName, getTables, getColumns, runQuery, connectToDb, disconnectFrom
 import { renderSidebar, renderTable, setEditorValue, getEditorValue, initEditor, setButtonLoading } from './ui.js';
 import { initResizers } from './layout.js';
 
+let currentQueryResult = null;
+
 document.addEventListener('DOMContentLoaded', initializeApp);
 
 async function initializeApp() {
@@ -43,6 +45,15 @@ async function initializeApp() {
     // --- NEW: Connection Modal & Disconnect Setup ---
     document.getElementById('disconnect-btn').addEventListener('click', handleDisconnect);
     setupConnectionModal();
+
+    // Hook up export buttons
+    document.getElementById('export-csv-btn').addEventListener('click', () => {
+        if (currentQueryResult) downloadCSV(currentQueryResult);
+    });
+    
+    document.getElementById('export-json-btn').addEventListener('click', () => {
+        if (currentQueryResult) downloadJSON(currentQueryResult);
+    });
 
     // Check localStorage for auto-login
     const savedConfig = localStorage.getItem('pg_client_config');
@@ -183,17 +194,22 @@ async function handleRunQuery() {
     setButtonLoading(true);
 
     const table = document.getElementById('results-table');
-    const statusDiv = document.getElementById('results-status');
+    const headerDiv = document.getElementById('results-header');
+    const statusText = document.getElementById('results-status');
+    const exportActions = document.getElementById('export-actions');
     
     table.innerHTML = ''; 
-    statusDiv.style.display = 'block';
-    statusDiv.className = 'results-status'; 
-    statusDiv.textContent = 'Executing query...';
+    headerDiv.style.display = 'flex';
+    exportActions.style.display = 'none'; // Hide exports while loading
+    statusText.textContent = 'Executing query...';
 
     const startTime = performance.now();
 
     try {
         const data = await runQuery(sql);
+        
+        // SAVE DATA FOR EXPORT
+        currentQueryResult = data.results || null;
         
         const endTime = performance.now();
         const durationMs = Math.round(endTime - startTime);
@@ -260,4 +276,43 @@ async function handleTableClick(tableName, container, header, event) {
         container.innerHTML = '<li class="error-msg">Failed to load columns</li>';
         showToast(`Failed to load columns for ${tableName}`, 'error');
     }
+}
+
+function downloadCSV(data, filename = 'query_results.csv') {
+    if (!data || !data.length) return;
+    
+    const headers = Object.keys(data[0]);
+    const csvRows = [];
+
+    csvRows.push(headers.map(h => `"${h}"`).join(','));    
+    for (const row of data) {
+        const values = headers.map(header => {
+            const val = row[header] === null ? '' : String(row[header]);
+            return `"${val.replace(/"/g, '""')}"`;
+        });
+        csvRows.push(values.join(','));
+    }
+    
+    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
+    triggerDownload(blob, filename);
+    showToast('CSV Exported Successfully', 'success');
+}
+
+function downloadJSON(data, filename = 'query_results.json') {
+    if (!data || !data.length) return;
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    triggerDownload(blob, filename);
+    showToast('JSON Exported Successfully', 'success');
+}
+
+function triggerDownload(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }

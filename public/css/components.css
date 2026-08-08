@@ -310,3 +310,60 @@
 .toast.success { border-left: 3px solid var(--accent-blue); } /* Darcula green */
 .toast.error { border-left: 3px solid #ff5555; }
 .toast.info { border-left: 3px solid #ff5555; }
+
+/* --- Results Header & Export Buttons --- */
+.results-header {
+    background-color: var(--bg-surface);
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 12px;
+    flex-shrink: 0;
+    min-height: 34px;
+}
+
+.results-status-text {
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.export-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.export-btn {
+    background-color: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 10px;
+    font-weight: 600;
+    font-family: var(--font-ui);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s ease;
+}
+
+.export-btn:hover {
+    background-color: var(--bg-elevated);
+    color: var(--text-primary);
+    border-color: var(--text-muted);
+}
+
+.export-btn:active {
+    transform: scale(0.96);
+}
+
+@media screen and (max-width: 768px) {
+    .results-status-text {
+        white-space: pre-wrap; /* Mobile: respects the \n as a line break */
+        line-height: 1.5;      /* Adds a little breathing room between the two lines */
+    }
+}

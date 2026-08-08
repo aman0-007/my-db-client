@@ -105,7 +105,21 @@
 
             <!-- Results Pane -->
             <section class="results-pane" id="results-pane">
-                <div id="results-status" class="results-status" style="display: none;"></div>
+                <!-- REPLACED RESULTS STATUS WITH NEW HEADER CONTAINING EXPORT BUTTONS -->
+                <div id="results-header" class="results-header" style="display: none;">
+                    <div id="results-status" class="results-status-text"></div>
+                    
+                    <div class="export-actions" id="export-actions">
+                        <button id="export-csv-btn" class="export-btn" title="Download CSV">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            CSV
+                        </button>
+                        <button id="export-json-btn" class="export-btn" title="Download JSON">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            JSON
+                        </button>
+                    </div>
+                </div>
                 <div class="results-wrapper">
                     <table id="results-table">
                     </table>
