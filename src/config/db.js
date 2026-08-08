@@ -1,24 +1,50 @@
 const { Pool } = require('pg');
 
-const pool = new Pool({
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    database: process.env.DB_NAME,
-});
+let pool = null;
 
-pool.on('connect', () => {
-    console.log('🐘 Connected to the PostgreSQL database.');
-});
+const connect = async (config) => {
+    // Destroy existing pool if one exists
+    if (pool) await pool.end();
+    
+    // Determine configuration style (URI vs standard)
+    const poolConfig = config.connectionString 
+        ? { connectionString: config.connectionString }
+        : {
+            host: config.host,
+            port: config.port,
+            user: config.user,
+            password: config.password,
+            database: config.database,
+        };
 
-pool.on('error', (err) => {
-    console.error('❌ Unexpected error on idle client', err);
-    process.exit(-1);
-});
+    pool = new Pool(poolConfig);
+
+    // Test the connection immediately
+    const client = await pool.connect();
+    client.release();
+    
+    pool.on('error', (err) => {
+        console.error('❌ Unexpected error on idle client', err);
+    });
+    
+    console.log('🐘 Connected to the PostgreSQL database dynamically.');
+};
+
+const disconnect = async () => {
+    if (pool) {
+        await pool.end();
+        pool = null;
+        console.log('🐘 Disconnected from the database.');
+    }
+};
+
+const query = (text, params) => {
+    if (!pool) throw new Error("Database not connected. Please connect first.");
+    return pool.query(text, params);
+};
 
 module.exports = {
-    // Expose a query function rather than the whole pool for better encapsulation
-    query: (text, params) => pool.query(text, params),
-    pool,
+    connect,
+    disconnect,
+    query,
 };

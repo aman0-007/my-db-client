@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- CodeMirror Core and Theme -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/darcula.min.css">
@@ -14,26 +15,69 @@
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/components.css">
 </head>
+
 <body>
+
+    <!-- ADD THIS CONNECTION OVERLAY -->
+    <div id="connection-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <h2 class="modal-title">Connect to Database</h2>
+            <div class="tabs">
+                <button class="tab-btn active" data-target="form-standard">Standard</button>
+                <button class="tab-btn" data-target="form-uri">Connection String</button>
+            </div>
+
+            <form id="form-standard" class="conn-form active">
+                <div class="form-group"><label>Host</label><input type="text" id="conn-host" placeholder="localhost"
+                        required></div>
+                <div class="form-group"><label>Port</label><input type="number" id="conn-port" placeholder="5432"
+                        required></div>
+                <div class="form-group"><label>User</label><input type="text" id="conn-user" placeholder="postgres"
+                        required></div>
+                <div class="form-group"><label>Password</label><input type="password" id="conn-pass" required></div>
+                <div class="form-group"><label>Database</label><input type="text" id="conn-db" placeholder="my_database"
+                        required></div>
+            </form>
+
+            <form id="form-uri" class="conn-form">
+                <div class="form-group"><label>PostgreSQL URI</label><input type="text" id="conn-uri"
+                        placeholder="postgresql://user:pass@host:5432/db"></div>
+            </form>
+
+            <button id="connect-submit-btn" class="primary-btn">Connect</button>
+            <div id="conn-error" class="error-msg"
+                style="display:none; margin-top: 12px; font-size: 12px; color: #ff5555;"></div>
+        </div>
+    </div>
+
     <div class="app-container">
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <span class="title">Explorer</span>
             </div>
-            
+
             <!-- The DB line now holds the toggle button -->
             <div class="sidebar-connection-info">
                 <span class="db-icon">🗄️</span>
-                <span id="active-db-name" class="db-title">Connecting...</span>
-                
+                <span id="active-db-name" class="db-title">Disconnected</span>
+
+                <button id="disconnect-btn" title="Disconnect"
+                    style="margin-left:auto; background:none; border:none; color:var(--text-secondary); cursor:pointer; padding:4px; display:none;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </button>
+
                 <button id="mobile-sidebar-toggle" class="mobile-toggle-btn" title="Toggle Sidebar">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="18 15 12 9 6 15"></polyline>
                     </svg>
                 </button>
             </div>
-            
+
             <ul id="table-list" class="tree-view"></ul>
         </aside>
 
@@ -42,12 +86,12 @@
 
         <!-- Right Side: Editor + Results -->
         <div class="main-panel">
-            
+
             <!-- Editor Pane -->
             <main class="editor-pane" id="editor-pane">
                 <div class="editor-wrapper">
                     <textarea id="sql-input" spellcheck="false" placeholder="Type your SQL query here..."></textarea>
-                    
+
                     <!-- Floating Run Button -->
                     <button id="run-btn" class="floating-btn" title="Run Query (Ctrl+Enter)">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none">
@@ -62,21 +106,22 @@
             <div class="resizer resizer-v" id="resizer-editor"></div>
 
             <!-- Results Pane -->
-            <section class="results-pane" id="results-pane"> 
+            <section class="results-pane" id="results-pane">
                 <div id="results-status" class="results-status" style="display: none;"></div>
                 <div class="results-wrapper">
                     <table id="results-table">
                     </table>
                 </div>
             </section>
-            
+
         </div>
     </div>
-    
+
     <!-- CodeMirror Core and SQL Mode -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/sql/sql.min.js"></script>
-    
+
     <script type="module" src="js/main.js"></script>
 </body>
+
 </html>

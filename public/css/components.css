@@ -222,3 +222,36 @@
     
     flex-shrink: 0;
 }
+
+
+/* --- Connection Modal --- */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999;
+}
+.modal-content {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle);
+    border-radius: 8px; padding: 24px; width: 90%; max-width: 360px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+}
+.modal-title { margin-bottom: 16px; font-size: 16px; font-weight: 600; color: var(--text-primary); }
+.tabs { display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px; }
+.tab-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 4px 8px; font-size: 12px; font-weight: 500; }
+.tab-btn.active { color: var(--text-primary); border-bottom: 2px solid var(--accent-blue); }
+.conn-form { display: none; flex-direction: column; gap: 12px; }
+.conn-form.active { display: flex; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group label { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+.form-group input { 
+    background: var(--bg-base); border: 1px solid var(--border-subtle); 
+    color: var(--text-primary); padding: 8px 10px; border-radius: 4px; font-family: var(--font-mono); font-size: 13px;
+    outline: none; transition: border 0.2s;
+}
+.form-group input:focus { border-color: var(--accent-blue); }
+.primary-btn { 
+    background: var(--accent-blue); color: #fff; border: none; padding: 10px 16px; 
+    border-radius: 4px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 20px; font-size: 13px;
+}
+.primary-btn:hover { background: var(--accent-blue-hover); }

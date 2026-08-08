@@ -1,5 +1,24 @@
 const db = require('../config/db');
 
+exports.connectDB = async (req, res) => {
+    try {
+        await db.connect(req.body);
+        res.json({ success: true, message: 'Connected successfully.' });
+    } catch (err) {
+        console.error('Connection error:', err);
+        res.status(400).json({ error: 'Failed to connect: ' + err.message });
+    }
+};
+
+exports.disconnectDB = async (req, res) => {
+    try {
+        await db.disconnect();
+        res.json({ success: true, message: 'Disconnected.' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
 exports.getDbName = async (req, res) => {
     try {
         const result = await db.query('SELECT current_database() AS db_name;');
