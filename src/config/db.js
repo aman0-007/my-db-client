@@ -15,13 +15,15 @@ const connect = async (config) => {
         // with any local Postgres instances you might have running.
         const localPort = Math.floor(Math.random() * (65000 - 10000) + 10000); 
         
-        const tunnelOptions = { autoClose: true };
+        const tunnelOptions = { autoClose: false };
         const serverOptions = { port: localPort };
         const sshOptions = {
             host: config.ssh.host,
             port: config.ssh.port,
             username: config.ssh.user,
-            password: config.ssh.password
+            password: config.ssh.password,
+            keepaliveInterval: 10000,
+            keepaliveCountMax: 3
         };
         const forwardOptions = {
             srcAddr: '127.0.0.1',

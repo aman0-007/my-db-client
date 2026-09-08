@@ -334,3 +334,7 @@ function triggerDownload(blob, filename) {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+
+window.addEventListener('beforeunload', () => {
+    navigator.sendBeacon('/api/disconnect');
+});
