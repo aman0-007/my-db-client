@@ -84,11 +84,22 @@ function setupConnectionModal() {
         });
     });
 
+    // Toggle SSH Fields Visibility
+    const useSshCheckbox = document.getElementById('use-ssh');
+    const sshFields = document.getElementById('ssh-fields');
+    if (useSshCheckbox) {
+        useSshCheckbox.addEventListener('change', (e) => {
+            sshFields.style.display = e.target.checked ? 'block' : 'none';
+        });
+    }
+
     // Connect button logic
     document.getElementById('connect-submit-btn').addEventListener('click', async (e) => {
-        e.preventDefault(); // Prevent form submission reloading the page
+        e.preventDefault(); 
         
         const isUri = document.getElementById('form-uri').classList.contains('active');
+        const useSsh = document.getElementById('use-ssh').checked;
+        
         const config = isUri ? 
             { connectionString: document.getElementById('conn-uri').value } :
             {
@@ -97,6 +108,13 @@ function setupConnectionModal() {
                 user: document.getElementById('conn-user').value,
                 password: document.getElementById('conn-pass').value,
                 database: document.getElementById('conn-db').value,
+                // Append SSH data if toggle is checked
+                ssh: useSsh ? {
+                    host: document.getElementById('ssh-host').value,
+                    port: parseInt(document.getElementById('ssh-port').value, 10) || 22,
+                    user: document.getElementById('ssh-user').value,
+                    password: document.getElementById('ssh-pass').value,
+                } : null
             };
         
         await executeConnection(config, true);

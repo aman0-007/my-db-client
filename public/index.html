@@ -28,15 +28,26 @@
             </div>
 
             <form id="form-standard" class="conn-form active">
-                <div class="form-group"><label>Host</label><input type="text" id="conn-host" placeholder="localhost"
-                        required></div>
-                <div class="form-group"><label>Port</label><input type="number" id="conn-port" placeholder="5432"
-                        required></div>
-                <div class="form-group"><label>User</label><input type="text" id="conn-user" placeholder="postgres"
-                        required></div>
+                <div class="form-group"><label>Host</label><input type="text" id="conn-host" placeholder="localhost" required></div>
+                <div class="form-group"><label>Port</label><input type="number" id="conn-port" placeholder="5432" required></div>
+                <div class="form-group"><label>User</label><input type="text" id="conn-user" placeholder="postgres" required></div>
                 <div class="form-group"><label>Password</label><input type="password" id="conn-pass" required></div>
-                <div class="form-group"><label>Database</label><input type="text" id="conn-db" placeholder="my_database"
-                        required></div>
+                <div class="form-group"><label>Database</label><input type="text" id="conn-db" placeholder="my_database" required></div>
+                
+                <!-- NEW: SSH Tunnel Toggle Section -->
+                <div style="margin-top: 16px; border-top: 1px solid var(--border-subtle); padding-top: 12px;">
+                    <div class="form-group" style="flex-direction: row; align-items: center; gap: 8px;">
+                        <input type="checkbox" id="use-ssh" style="width: auto; margin: 0; cursor: pointer;">
+                        <label for="use-ssh" style="margin: 0; cursor: pointer; color: var(--text-secondary);">Use SSH Tunnel</label>
+                    </div>
+
+                    <div id="ssh-fields" style="display: none; margin-top: 12px; padding: 12px; background: rgba(0,0,0,0.2); border-radius: 4px; border: 1px solid var(--border-subtle);">
+                        <div class="form-group"><label>SSH Host (VPS IP)</label><input type="text" id="ssh-host" placeholder="200.234.41.125"></div>
+                        <div class="form-group"><label>SSH Port</label><input type="number" id="ssh-port" placeholder="22" value="22"></div>
+                        <div class="form-group"><label>SSH User</label><input type="text" id="ssh-user" placeholder="root"></div>
+                        <div class="form-group"><label>SSH Password</label><input type="password" id="ssh-pass"></div>
+                    </div>
+                </div>
             </form>
 
             <form id="form-uri" class="conn-form">
